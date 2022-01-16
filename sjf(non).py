@@ -58,7 +58,19 @@ def extract_pids(proc):
     return pids[:]
 
 
-processes = generator(5)
+def sjf_sort(proc):
+    has_swapped = True
+
+    while (has_swapped):
+        has_swapped = False
+        for i in range(len(proc) - 1):
+            if proc[i]["burst"] < proc[i + 1]["burst"]:
+                proc[i], proc[i + 1] = proc[i + 1], proc[i]
+                has_swapped = True
+    return proc[:]
+
+
+processes = generator(10)
 ready = []
 terminated = []
 logs = []
@@ -81,7 +93,15 @@ while True:
         load = processes.pop()
         load["arrival"] = cycle
         ready.insert(0, load)
+
+        ready = sjf_sort(ready)
+
+
+
         print("[i]", "Added", load["pid"], "to READY[].")
+
+
+
 
 
     if current_left == 0:
@@ -94,7 +114,6 @@ while True:
                          extract_pids(terminated)))
             print("[i] No more processes to execute")
             break
-
 
         if len(ready) > 0:
             current = ready.pop()
@@ -145,8 +164,8 @@ print("\n========================= LOGS ==================================\n")
 print_logs(logs)
 
 
-save_to_csv(terminated, "terminated_fcfs.csv")
-save_logs_to_csv(logs, "logs_fcfs.csv")
+save_to_csv(terminated, "terminated_sjf.csv")
+save_logs_to_csv(logs, "logs_sjf.csv")
 
 
 

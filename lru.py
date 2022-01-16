@@ -8,15 +8,15 @@ def page_generator(n):
         pages.append(random.randint(10))
     return pages
 
-def save_to_csv(logs):
+def save_to_csv(alogs, filename):
     col_names = ["PAGE", "RAM", "QUEUE[in->out]", "SWAPPED[in:out]"]
-    df = pd.DataFrame(logs, columns=col_names)
-    df.to_csv('lru_logs.csv')
+    df = pd.DataFrame(alogs, columns=col_names)
+    df.to_csv(filename)
 
 
-def print_logs(logs):
+def print_logs(alogs):
     col_names = ["PAGE", "RAM", "QUEUE[f->l]", "SWAPPED[in:out]"]
-    df = pd.DataFrame(logs, columns=col_names)
+    df = pd.DataFrame(alogs, columns=col_names)
     print(df)
 
 
@@ -27,39 +27,39 @@ slots = 4
 swap = None
 swap_count = 0
 
-QUEUE = []
-RAM = []
-LOGS = []
+queue = []
+ram = []
+logs = []
 
 #main loop
 for page in INCOMING:
 
-    if page not in QUEUE:
-        if len(QUEUE) < slots:
+    if page not in queue:
+        if len(queue) < slots:
             # filling RAM[]
-            QUEUE.insert(0, page)
-            RAM.append(page)
+            queue.insert(0, page)
+            ram.append(page)
             swap = None
 
         else:
             # classic fifo
-            QUEUE.insert(0, page)
-            out = QUEUE.pop()
+            queue.insert(0, page)
+            out = queue.pop()
             swap = (page, out)
             swap_count += 1
             #replacing pages in RAM on right positions
-            idx = RAM.index(out)
-            RAM.pop(idx)
-            RAM.insert(idx, page)
+            idx = ram.index(out)
+            ram.pop(idx)
+            ram.insert(idx, page)
 
 
 
     else:
-        QUEUE.insert(0, QUEUE.pop(QUEUE.index(page)))
+        queue.insert(0, queue.pop(queue.index(page)))
         swap = None
-    LOGS.append((page, RAM[:], QUEUE[:], swap))
+    logs.append((page, ram[:], queue[:], swap))
 
 
-print_logs(LOGS)
+print_logs(logs)
 print("Total pages swapped: ", swap_count, "\n")
-save_to_csv(LOGS)
+save_to_csv(logs, "lru_logs.csv")

@@ -8,55 +8,55 @@ def page_generator(n):
     return pages
 
 
-def save_to_csv(logs):
+def save_to_csv(alogs, filename):
     col_names = ["PAGE", "RAM", "QUEUE[f->l]", "SWAPPED[in:out]"]
-    df = pd.DataFrame(logs, columns=col_names)
-    df.to_csv('fifo_logs.csv')
+    df = pd.DataFrame(alogs, columns=col_names)
+    df.to_csv(filename)
 
 
-def print_logs(logs):
+def print_logs(alogs):
     col_names = ["PAGE", "RAM", "QUEUE[f->l]", "SWAPPED[in:out]"]
-    df = pd.DataFrame(logs, columns=col_names)
+    df = pd.DataFrame(alogs, columns=col_names)
     print(df)
 
 
-INCOMING = [2, 5, 1, 0, 6, 3, 3, 5, 2, 6, 4, 2, 0, 0, 4, 8, 5, 4, 7, 8]
+incoming = [2, 5, 1, 0, 6, 3, 3, 5, 2, 6, 4, 2, 0, 0, 4, 8, 5, 4, 7, 8]
 #page_generator(50)
-QUEUE = []
-RAM = []
-LOGS = []
+queue = []
+ram = []
+logs = []
 
 slots = 4
 swap_count = 0
 swap = None
 
 #main loop
-for page in INCOMING:
+for page in incoming:
 
-    if page not in QUEUE:
-        if len(QUEUE) < slots:
+    if page not in queue:
+        if len(queue) < slots:
             #filling RAM[]
-            QUEUE.insert(0, page)
-            RAM.append(page)
+            queue.insert(0, page)
+            ram.append(page)
             swap = None
         else:
             #when RAM is full, start swaping pages
-            QUEUE.insert(0, page)
-            out = QUEUE.pop()
+            queue.insert(0, page)
+            out = queue.pop()
 
             swap = (page, out)
             swap_count += 1
 
-            idx = RAM.index(out)
-            RAM.pop(idx)
-            RAM.insert(idx, page)
+            idx = ram.index(out)
+            ram.pop(idx)
+            ram.insert(idx, page)
     else:
         swap = None
 
     #saving status of each iteration
-    LOGS.append((page, RAM[:], QUEUE[:], swap))
+    logs.append((page, ram[:], queue[:], swap))
 
 
-print_logs(LOGS)
+print_logs(logs)
 print("\nTotal pages swapped: ", swap_count, "\n")
-save_to_csv(LOGS)
+save_to_csv(logs, "fifo_logs.csv")
