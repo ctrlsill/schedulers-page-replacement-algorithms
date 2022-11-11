@@ -15,9 +15,16 @@
 
 </aside>
 
+# Processors Time Scheduling Algorithms Details
+
 ### **INPUT:**
 
 number of processes to be generated (default = 5 for demonstration reasons)
+
+<aside>
+💡 1 while loop cycle represents one processor clock time cycle
+
+</aside>
 
 ### Steps of scripts execution:
 
@@ -25,11 +32,10 @@ number of processes to be generated (default = 5 for demonstration reasons)
 2. Processes are being randomly added in real time to ready queue (ready[]):
     - if there is no processes in queue in current cycle → program goes to next cycle waiting for processes
     - if there are some ready processes → queue is processed by according sorting algorithm and then 1 process from the front of queue is loaded for execution by processor
-3. 
-4. 
-5. 
-6. 
-7. 
+3. Loaded process is being executed, while new process loads to ready queue
+4. When current process finish its execution it terminates and frees up CPU for next process  
+5. Whole operation repeats until all of processes are handled
+6. When there’s no more processes waiting, program prints out summary of its execution 
 
 ### OUTPUT:
 
@@ -40,7 +46,11 @@ Script prints out to the console the state of every execution cycle:
 - number of current cycle
 - currently running process PID and time left to end of its execution
 - list of already terminated processes
-- when all of generated processes end its execution, program prints out summary of its execution:
-    - total cycles
-    - average waiting time
-    - logs
+
+When all of generated processes end its execution, program prints out summary of its execution:
+
+- total cycles
+- average waiting time
+- logs
+
+# Memory Page Replacement Algorithms Details
